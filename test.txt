@@ -1,0 +1,8 @@
+numer pesel	imie	nazwisko
+85070944874	arek	kowalski
+70101266553	marek	soltys
+51020176916	artur	urban
+96080359754	aleksandra	wojtasik
+
+
+

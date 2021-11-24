@@ -1,20 +1,7 @@
-import pandas as pd
-import numpy as np
-import os
 import random
-import json
 import datetime
 from dateutil.relativedelta import *
 from faker import Faker
-from pprint import pprint
-
-# from random import randint, randrange
-import gzip
-
-#  unix
-# os.chdir("../data_folder")
-# df = pd.read_csv("data.csv")
-# data_txt = pd.read_csv()
 
 
 def verification_correctness_personal_id(personal_id):
@@ -63,9 +50,9 @@ def calculate_gender(personal_id):
 def is_adult_calculation(age):
     age = int(age)
     if age >= 18:
-        return 'Yes'
+        return True
     else:
-        return 'No'
+        return False
 
 
 def calculate_control_num(ten_first_num_of_personal_id):
@@ -183,97 +170,6 @@ def generator_last_names(n_names):
         list_of_last_names.append(fake.last_name())
     return list_of_last_names
 
-
-list_of_correct_personal_id = generator_perosnal_id(10)
-list_of_correct_personal_id.extend(list_of_correct_personal_id[:4])
-list_of_names = generator_first_names(10)
-list_of_names.extend(list_of_names[:4])
-list_of_surnames = generator_last_names(10)
-list_of_surnames.extend(list_of_surnames[:4])
-
-details = {
-    'imie': list_of_names,
-    'nazwisko': list_of_surnames,
-    'pesel': list_of_correct_personal_id,
-}
-data_frame = pd.DataFrame(details)
-
-personal_id = 93031112877
-# personal_id = '03231112877'
-# personal_id = '03231112877'  # for woman
-verification_correctness_personal_id(personal_id)
-calculate_age(personal_id)
-calculate_gender(personal_id)
-
-
-# I point: data processing
-# pd.read_csv(os.path.join(os.path.dirname(__file__), "./files/plik_test.txt"), header=None, sep='   ')
-# print(os.path.join(os.path.dirname(__file__), "./files/plik_test.txt"))
-
-# 1 number of rows
-print(len(data_frame.index))
-# 2 all distinct names sorted in alphabetical order
-print(data_frame['imie'].sort_values().unique())
-# 3 all names which do not reapeat in df
-# data_frame['name'].value_counts()
-print(data_frame.drop_duplicates(subset=['imie'], keep=False)['imie'].sort_values().to_string())
-# 4 print of count unique names
-print(data_frame['imie'].value_counts())
-
-# 5
-# I used here contains case false to incluse all gaja big or small letters
-print(data_frame[data_frame['imie'].str.contains("Jan", case=False)])
-print(data_frame[data_frame['imie'].str.contains("gaja", case=False)])
-
-
-# import gzip
-# content = b"Lots of content here"
-# f = gzip.open('/home/joe/file.txt.gz', 'wb')
-# f.write(content)
-# f.close()
-
-
-# 6 from wynik.txt sort data by personalID descending way and save into wynik_sorted.txt
-data_frame.sort_values(by=['pesel'], axis=0, ascending=False)
-# 7 change options wynik_sorted.txt into only read for all users except of file owner
-
-
-# II point: programming
-
-list_of_correct_personal_id = generator_perosnal_id(10000)
-list_of_correct_personal_id.extend(list_of_correct_personal_id[:4])
-list_of_names = generator_first_names(10000)
-list_of_names.extend(list_of_names[:4])
-list_of_surnames = generator_last_names(10000)
-list_of_surnames.extend(list_of_surnames[:4])
-
-details = {
-    'imie': list_of_names,
-    'nazwisko': list_of_surnames,
-    'pesel': list_of_correct_personal_id,
-}
-data_frame = pd.DataFrame(details)
-list_of_prepared_dicts = {}
-for index, row in data_frame.iterrows():
-    print(row['pesel'])
-    dict_of_record_df = {
-        row['pesel']: {
-            "imie": row['imie'],
-            "nazwisko": row['nazwisko'],
-            "płeć": calculate_gender(row['pesel']),
-            "wiek": calculate_age(row['pesel']),
-            "czy_dorosły": is_adult_calculation(row['pesel']),
-            "poprawny_pesel": str(verification_correctness_personal_id(row['pesel'])),
-        },
-    }
-    list_of_prepared_dicts.update(dict_of_record_df)
-
-
-pprint(list_of_prepared_dicts)
-
-dict(name='baza', children=list_of_prepared_dicts)
-list_of_prepared_dicts2 = dict(baza=list_of_prepared_dicts)
-expected_json = json.dumps(list_of_prepared_dicts)
 
 
 
